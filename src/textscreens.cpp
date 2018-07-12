@@ -375,11 +375,13 @@ void TextWindow::ShowGroupInfo() {
        g->type == Group::Type::HELIX) {
         bool un   = (g->meshCombine == Group::CombineAs::UNION);
         bool diff = (g->meshCombine == Group::CombineAs::DIFFERENCE);
+        bool intr = (g->meshCombine == Group::CombineAs::INTERSECTION);
         bool asy  = (g->meshCombine == Group::CombineAs::ASSEMBLE);
 
         Printf(false, " %Ftsolid model as");
         Printf(false, "%Ba   %f%D%Lc%Fd%s union%E  "
                              "%f%D%Lc%Fd%s difference%E  "
+                             "%f%D%Lc%Fd%s intersection%E  "
                              "%f%D%Lc%Fd%s assemble%E  ",
             &TextWindow::ScreenChangeGroupOption,
             Group::CombineAs::UNION,
@@ -387,6 +389,9 @@ void TextWindow::ShowGroupInfo() {
             &TextWindow::ScreenChangeGroupOption,
             Group::CombineAs::DIFFERENCE,
             diff ? RADIO_TRUE : RADIO_FALSE,
+            &TextWindow::ScreenChangeGroupOption,
+            Group::CombineAs::INTERSECTION,
+            intr ? RADIO_TRUE : RADIO_FALSE,
             &TextWindow::ScreenChangeGroupOption,
             Group::CombineAs::ASSEMBLE,
             (asy ? RADIO_TRUE : RADIO_FALSE));

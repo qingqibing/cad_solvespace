@@ -16,6 +16,10 @@ void SShell::MakeFromDifferenceOf(SShell *a, SShell *b) {
     MakeFromBoolean(a, b, SSurface::CombineAs::DIFFERENCE);
 }
 
+void SShell::MakeFromIntersectionOf(SShell *a, SShell *b) {
+    MakeFromBoolean(a, b, SSurface::CombineAs::INTERSECT);
+}
+
 //-----------------------------------------------------------------------------
 // Take our original pwl curve. Wherever an edge intersects a surface within
 // either agnstA or agnstB, split the piecewise linear element. Then refine
@@ -215,6 +219,13 @@ static bool KeepRegion(SSurface::CombineAs type, bool opA, SShell::Class shell, 
                 return (!inShell && !inFace);
             } else {
                 return (inShell && !inFace) || inSame;
+            }
+
+        case SSurface::CombineAs::INTERSECT:
+            if(opA) {
+                return (!inShell && inFace);
+            } else {
+                return (!inShell && inFace) || inSame;
             }
 
         default: ssassert(false, "Unexpected combine type");

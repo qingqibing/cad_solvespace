@@ -286,6 +286,14 @@ void SMesh::MakeFromDifferenceOf(SMesh *a, SMesh *b) {
     AddAgainstBsp(a, bspb);
 }
 
+void SMesh::MakeFromIntersectionOf(SMesh *a, SMesh *b) {
+    SBsp3 *bspa = SBsp3::FromMesh(a);
+    SBsp3 *bspb = SBsp3::FromMesh(b);
+
+    AddAgainstBsp(a, bspb);
+    AddAgainstBsp(b, bspa);
+}
+
 void SMesh::MakeFromCopyOf(SMesh *a) {
     ssassert(this != a, "Can't make from copy of self");
     for(int i = 0; i < a->l.n; i++) {
