@@ -112,7 +112,14 @@ add_subdirectory(extlib/libdxfrw)
 
 message(STATUS "Using in-tree flatbuffers")
 set(FLATBUFFERS_BUILD_FLATLIB ON CACHE BOOL "")
-set(FLATBUFFERS_BUILD_FLATC ON CACHE BOOL "")
+if(EMSCRIPTEN)
+    set(FLATBUFFERS_BUILD_FLATC OFF CACHE BOOL "")
+    if(NOT FLATC)
+        message(FATAL_ERROR "Emscripten build requires specifying the flatc binary explicitly")
+    endif()
+else()
+    set(FLATBUFFERS_BUILD_FLATC ON CACHE BOOL "")
+endif()
 set(FLATBUFFERS_BUILD_FLATHASH OFF CACHE BOOL "")
 set(FLATBUFFERS_BUILD_TESTS OFF CACHE BOOL "")
 add_subdirectory(extlib/flatbuffers EXCLUDE_FROM_ALL)
@@ -121,7 +128,7 @@ message(STATUS "Using in-tree q3d")
 add_subdirectory(extlib/q3d)
 set(Q3D_INCLUDE_DIR ${CMAKE_BINARY_DIR}/extlib/q3d)
 
-if(WIN32 OR APPLE)
+if(WIN32 OR APPLE OR EMSCRIPTEN)
     # On Win32 and macOS we use vendored packages, since there is little to no benefit
     # to trying to find system versions. In particular, trying to link to libraries from
     # Homebrew or macOS system libraries into the .app file is highly likely to result
@@ -209,6 +216,8 @@ if(ENABLE_GUI)
     elseif(APPLE)
         find_package(OpenGL REQUIRED)
         find_library(APPKIT_LIBRARY AppKit REQUIRED)
+    elseif(EMSCRIPTEN)
+        # Everything is built in
     else()
         find_package(OpenGL REQUIRED)
         find_package(SpaceWare)
